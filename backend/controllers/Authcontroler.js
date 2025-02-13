@@ -5,21 +5,31 @@ const jwt = require('jsonwebtoken');
 // Register User
 exports.register = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { username, email, password } = req.body; // ✅ Match frontend
 
         // Check if user already exists
         let user = await User.findOne({ email });
         if (user) return res.status(400).json({ message: "User already exists" });
 
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         // Create new user
-        user = new User({ name, email, password });
+        user = new User({ username, email, password: hashedPassword });
         await user.save();
 
-        res.status(201).json({ message: "User registered successfully" });
+        // Generate JWT Token
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+        res.status(201).json({ message: "User registered successfully", token });
+
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("Registration Error:", err);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
 
 // Login User
 exports.login = async (req, res) => {
