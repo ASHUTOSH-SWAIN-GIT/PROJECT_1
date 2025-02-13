@@ -1,26 +1,27 @@
 require('dotenv').config();
 const express = require('express');
-const app = express();
-const mongoose = require(`mongoose`)
+const mongoose = require('mongoose');
 
+const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
+// Import routes correctly
+const inventoryRoutes = require('../backend/routes/InventoryRoute'); 
+const userRoutes = require('./routes/Userroutes'); 
 
+// Use routes
+app.use('/api/inventory', inventoryRoutes);
+app.use('/api/users', userRoutes);
 
+// Connect to MongoDB and start the server
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
-        app.listen(process.env.PORT, () => {
-            console.log('connected to db on the port', process.env.PORT);
-        })
+        app.listen(port, () => {
+            console.log(`Connected to DB & Server running on http://localhost:${port}`);
+        });
     })
     .catch((err) => {
-        console.log("error", err);
-    })
-
-
-
-
-
-
+        console.log("Database connection error:", err);
+    });

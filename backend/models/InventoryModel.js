@@ -13,6 +13,18 @@ const InventorySchema = new Schema({
     price: {
         type: Number,
         required: true
-    }
+    },
+    category: {
+        type: String,
+        required: true
+    },
+    note: {
+        type: String,
+        required: true
+    },
 
-})
+
+},{timestamps: true});
+
+module.exports = mongoose.model('Inventory', InventorySchema);
+
