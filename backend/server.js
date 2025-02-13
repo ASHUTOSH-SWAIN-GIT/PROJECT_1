@@ -10,10 +10,12 @@ app.use(express.json());
 // Import routes correctly
 const inventoryRoutes = require('../backend/routes/InventoryRoute'); 
 const userRoutes = require('./routes/Userroutes'); 
+const authRoutes = require('./routes/AuthRoutes');
 
 // Use routes
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
 
 // Connect to MongoDB and start the server
 mongoose.connect(process.env.MONGO_URI)

@@ -1,17 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
+const { register, login, getProfile } = require('../controllers/Authcontroler'); // Import controllers
+const authMiddleware = require('../middleware/authMiddleware'); // Auth middleware to protect routes
 
-router.get('/profile', (req, res) => {
-    res.send('get all user profile');
-});
+// Register a new user
+router.post('/register', register);
 
-router.post('/login', (req, res) => {
-    res.send('login user');   
-});
+// Login user
+router.post('/login', login);
 
-router.post('/register', (req, res) => {
-    res.send('register user');
-})
+// Get user profile (protected route, requires authentication)
+router.get('/profile', authMiddleware, getProfile);
 
 module.exports = router;
