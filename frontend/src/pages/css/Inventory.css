@@ -140,11 +140,48 @@
   background: var(--primary-hover);
 }
 
+/* Inventory Cards */
+.inventory-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 0;
+}
+
+.inventory-card {
+  background: var(--background);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--border);
+}
+
+.inventory-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.inventory-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.inventory-desc {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
 /* Table */
 .table-wrapper {
   border-radius: 10px;
   overflow: hidden;
   box-shadow: var(--shadow);
+  margin-top: 2rem;
 }
 
 .inventory-table {
@@ -172,6 +209,7 @@
 .action-btns {
   display: flex;
   gap: 0.8rem;
+  justify-content: center;
 }
 
 .edit-btn,

@@ -28,7 +28,7 @@ const Inventory = () => {
 
   const fetchInventory = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/inventory");
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/inventory`);
       setItems(response.data);
       setFilteredItems(response.data);
     } catch (error) {
@@ -63,9 +63,9 @@ const Inventory = () => {
     e.preventDefault();
     try {
       if (editingItem) {
-        await axios.put(`http://localhost:5000/api/inventory/${editingItem._id}`, formData);
+        await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/inventory/${editingItem._id}`, formData);
       } else {
-        await axios.post("http://localhost:5000/api/inventory", formData);
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/inventory`, formData);
       }
       setFormData({ name: "", quantity: "", price: "", category: "", note: "" });
       setEditingItem(null);
@@ -82,7 +82,7 @@ const Inventory = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/inventory/${id}`);
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/inventory/${id}`);
       fetchInventory();
     } catch (error) {
       console.error("Error deleting inventory:", error);

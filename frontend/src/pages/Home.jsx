@@ -10,16 +10,17 @@ const Home = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     alert("Logged out successfully!");
-    navigate("/login");
+    navigate("/"); // Redirect to home page
   };
+  
 
   return (
     <div className="home-container">
       {/* Navigation Bar */}
       <nav className="navbar">
-        <div className="logo">MyApp</div>
+        <div className="logo">Inventory Manager</div>
         <div className="nav-links">
-          <Link to="/Home" className="nav-btn"><FaHome /> Home</Link>
+          <Link to="/" className="nav-btn"><FaHome /> Home</Link>
           <Link to="/inventory" className="nav-btn"><FaBox /> Inventory</Link>
           {!token && <Link to="/signup" className="nav-btn"><FaUserPlus /> Signup</Link>}
           {token ? (
@@ -34,7 +35,7 @@ const Home = () => {
 
       {/* Hero Section */}
       <section className="hero">
-        <h1>Welcome to MyApp</h1>
+        <h1>Welcome to Inventory Manager</h1>
         <p>Manage your inventory efficiently with our system.</p>
         {!token && <Link to="/signup" className="cta-btn">Get Started</Link>}
       </section>

@@ -3,24 +3,23 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-// Initialize Express app
 const app = express();
-const port = process.env.PORT || 3000; // Use port 4000 for backend
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
 
-// Enable CORS
+// Enable CORS dynamically
 app.use(
   cors({
-    origin: "http://localhost:5174", // Ensure this matches your frontend URL
-    credentials: true, // Allow cookies & authentication headers
+    origin: process.env.FRONTEND_URL || "http://localhost:5000", // Fallback if env variable is missing
+    credentials: true,
   })
 );
 
-// Import routes correctly
-const inventoryRoutes = require("./routes/InventoryRoute"); 
-const userRoutes = require("./routes/Userroutes"); 
+// Import routes
+const inventoryRoutes = require("./routes/InventoryRoute");
+const userRoutes = require("./routes/Userroutes");
 const authRoutes = require("./routes/AuthRoutes");
 
 // Use routes
@@ -33,10 +32,10 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     app.listen(port, () => {
-      console.log(`✅ Connected to MongoDB & Server running on http://localhost:${port}`);
+      console.log(`Connected to MongoDB & Server running on http://localhost:${port}`);
     });
   })
   .catch((err) => {
-    console.error("❌ Database connection error:", err);
+    console.error("Database connection error:", err);
     process.exit(1);
   });
