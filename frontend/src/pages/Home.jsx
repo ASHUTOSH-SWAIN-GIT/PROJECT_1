@@ -1,18 +1,34 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../pages/css/Home.css";
+import { FaHome, FaBox, FaSignInAlt, FaUserPlus, FaSignOutAlt } from "react-icons/fa"; // Import icons
 
 const Home = () => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token"); 
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    alert("Logged out successfully!");
+    navigate("/login");
+  };
+
   return (
     <div className="home-container">
       {/* Navigation Bar */}
       <nav className="navbar">
         <div className="logo">MyApp</div>
         <div className="nav-links">
-          <Link to="/Home" className="nav-btn">Home</Link>
-          <Link to="/inventory" className="nav-btn">Inventory</Link>
-          <Link to="/signup" className="nav-btn">Sighnup</Link>
-          <Link to="/login" className="nav-btn">Login</Link>
+          <Link to="/Home" className="nav-btn"><FaHome /> Home</Link>
+          <Link to="/inventory" className="nav-btn"><FaBox /> Inventory</Link>
+          {!token && <Link to="/signup" className="nav-btn"><FaUserPlus /> Signup</Link>}
+          {token ? (
+            <button className="nav-btn logout-btn" onClick={handleLogout}>
+              <FaSignOutAlt /> Logout
+            </button>
+          ) : (
+            <Link to="/login" className="nav-btn"><FaSignInAlt /> Login</Link>
+          )}
         </div>
       </nav>
 
@@ -20,10 +36,10 @@ const Home = () => {
       <section className="hero">
         <h1>Welcome to MyApp</h1>
         <p>Manage your inventory efficiently with our system.</p>
-        <Link to="/signup" className="cta-btn">Get Started</Link>
+        {!token && <Link to="/signup" className="cta-btn">Get Started</Link>}
       </section>
     </div>
   );
 };
 
-export default Home;  // ✅ Ensure this line is present!
+export default Home;

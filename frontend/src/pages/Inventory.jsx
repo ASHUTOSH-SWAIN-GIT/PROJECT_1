@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ Import for navigation
 import axios from "axios";
+import Fuse from "fuse.js";
 import "../pages/css/Inventory.css";
 
 const Inventory = () => {
+  const navigate = useNavigate(); // ✅ Hook for navigation
   const [items, setItems] = useState([]);
-  const [filteredItems, setFilteredItems] = useState([]); // Stores search results
-  const [searchQuery, setSearchQuery] = useState(""); // Search input state
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
   const [formData, setFormData] = useState({
     name: "",
     quantity: "",
@@ -16,49 +22,50 @@ const Inventory = () => {
 
   const [editingItem, setEditingItem] = useState(null);
 
-  // ✅ Fetch Inventory Items
   useEffect(() => {
     fetchInventory();
   }, []);
 
   const fetchInventory = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/inventory");
+      const response = await axios.get("http://localhost:5000/api/inventory");
       setItems(response.data);
-      setFilteredItems(response.data); // Initialize filteredItems with all items
+      setFilteredItems(response.data);
     } catch (error) {
       console.error("Error fetching inventory:", error);
     }
   };
 
-  // ✅ Handle Input Change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ✅ Handle Search
   const handleSearch = (e) => {
-    const query = e.target.value.toLowerCase();
+    const query = e.target.value;
     setSearchQuery(query);
 
-    const filtered = items.filter(
-      (item) =>
-        item.name.toLowerCase().includes(query) ||
-        item.category.toLowerCase().includes(query) ||
-        item.note.toLowerCase().includes(query)
-    );
+    if (!query) {
+      setFilteredItems(items);
+      return;
+    }
 
-    setFilteredItems(filtered);
+    const fuse = new Fuse(items, {
+      keys: ["name", "category", "note"],
+      threshold: 0.3,
+    });
+
+    const results = fuse.search(query).map((result) => result.item);
+    setFilteredItems(results);
+    setCurrentPage(1);
   };
 
-  // ✅ Add or Update Inventory Item
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (editingItem) {
-        await axios.put(`http://localhost:4000/api/inventory/${editingItem._id}`, formData);
+        await axios.put(`http://localhost:5000/api/inventory/${editingItem._id}`, formData);
       } else {
-        await axios.post("http://localhost:4000/api/inventory", formData);
+        await axios.post("http://localhost:5000/api/inventory", formData);
       }
       setFormData({ name: "", quantity: "", price: "", category: "", note: "" });
       setEditingItem(null);
@@ -68,39 +75,58 @@ const Inventory = () => {
     }
   };
 
-  // ✅ Edit Inventory Item
   const handleEdit = (item) => {
     setFormData(item);
     setEditingItem(item);
   };
 
-  // ✅ Delete Inventory Item
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/api/inventory/${id}`);
+      await axios.delete(`http://localhost:5000/api/inventory/${id}`);
       fetchInventory();
     } catch (error) {
       console.error("Error deleting inventory:", error);
     }
   };
 
+  const handleLogout = () => {
+    // ✅ Clear session (Modify as needed)
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <div className="inventory-container">
+      {/* ✅ Navbar */}
+      <nav className="navbar">
+        <h2 className="nav-brand">Inventory</h2>
+        <div className="nav-links">
+          <button className="nav-btn" onClick={() => navigate("/")}>Home</button>
+          <button className="nav-btn logout" onClick={handleLogout}>Logout</button>
+        </div>
+      </nav>
+
       <div className="inventory-header-container">
         <h2 className="inventory-header">Inventory Management</h2>
 
-        {/* ✅ Search Box */}
-        <input
-          type="text"
-          className="search-box"
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={handleSearch}
-        />
-        
+        <div className="search-container">
+          <input
+            type="text"
+            className="search-box"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={handleSearch}
+          />
+          <button className="search-btn" onClick={() => handleSearch({ target: { value: searchQuery } })}>
+            🔍
+          </button>
+        </div>
       </div>
 
-      {/* ✅ Inventory Form */}
       <form className="inventory-form" onSubmit={handleSubmit}>
         <div className="form-grid">
           <input type="text" name="name" className="input-field" placeholder="Item Name" value={formData.name} onChange={handleChange} required />
@@ -112,7 +138,6 @@ const Inventory = () => {
         <button type="submit" className="submit-btn">{editingItem ? "Update Item" : "Add Item"}</button>
       </form>
 
-      {/* ✅ Inventory Table */}
       <div className="table-wrapper">
         <table className="inventory-table">
           <thead>
@@ -126,7 +151,7 @@ const Inventory = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredItems.map((item) => (
+            {currentItems.map((item) => (
               <tr key={item._id}>
                 <td>{item.name}</td>
                 <td>{item.quantity}</td>
@@ -139,13 +164,23 @@ const Inventory = () => {
                 </td>
               </tr>
             ))}
-            {filteredItems.length === 0 && (
+            {currentItems.length === 0 && (
               <tr>
                 <td colSpan="6" className="no-results">No items found</td>
               </tr>
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="pagination">
+        <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1} className="page-btn">
+          ⬅ Previous
+        </button>
+        <span className="page-number">Page {currentPage}</span>
+        <button onClick={() => setCurrentPage(currentPage + 1)} disabled={indexOfLastItem >= filteredItems.length} className="page-btn">
+          Next ➡
+        </button>
       </div>
     </div>
   );

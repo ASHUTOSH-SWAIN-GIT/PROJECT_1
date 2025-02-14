@@ -1,17 +1,19 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
 import "./css/Login.css";
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // ✅ Initialize useNavigate
 
   // ✅ Handle Input Change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ✅ Handle Form Submission (Connect to Backend)
+  // ✅ Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -22,9 +24,9 @@ const Login = () => {
     }
 
     setLoading(true);
-    
+
     try {
-      const response = await fetch("http://localhost:4000/api/users/login", {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -33,11 +35,11 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", data.token); // Save JWT Token
+        localStorage.setItem("token", data.token); // ✅ Save JWT Token
         alert("Login Successful!");
-        window.location.href = "/dashboard"; // Redirect user
+        navigate("/"); // ✅ Redirect to Home Page
       } else {
-        setError(data.error || "Invalid credentials");
+        setError(data.message || "Invalid credentials");
       }
     } catch (err) {
       setError("Server error. Please try again.");
