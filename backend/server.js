@@ -10,9 +10,13 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 // Enable CORS dynamically
+const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS
+  ? process.env.CORS_ALLOWED_ORIGINS.split(",")
+  : ["http://localhost:5173"]; // Default frontend URL
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5000", // Fallback if env variable is missing
+    origin: allowedOrigins,
     credentials: true,
   })
 );

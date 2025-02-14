@@ -38,7 +38,7 @@ const Signup = () => {
 
     try {
       //  Send Correct Data to Backend
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, {
+      const response = await axios.post(`http://localhost:5000/api/auth/register`, {
         username: formData.username, 
         email: formData.email,
         password: formData.password,
