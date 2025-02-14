@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
 import axios from "axios";
-import "./css/Sighnup.css"; // ✅ Fixed typo
+import "../pages/css/Sighnup.css"; // ✅ Fixed typo
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ const Signup = () => {
 
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
+  const navigate = useNavigate(); // ✅ Initialize useNavigate
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,7 +38,7 @@ const Signup = () => {
 
     try {
       // ✅ Send Correct Data to Backend
-      const response = await axios.post("http://localhost:4000/api/users/register", {
+      const response = await axios.post("http://localhost:5000/api/auth/register", {
         username: formData.username, 
         email: formData.email,
         password: formData.password,
@@ -47,6 +49,11 @@ const Signup = () => {
 
       // ✅ Clear form
       setFormData({ username: "", email: "", password: "", confirmPassword: "" });
+
+      // ✅ Redirect to Login Page after Signup
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000); // Redirect after 2 seconds
 
     } catch (error) {
       console.error("Signup error:", error.response?.data || error.message);
@@ -88,6 +95,12 @@ const Signup = () => {
 
         <button type="submit">Sign Up</button>
       </form>
+
+      {/* ✅ Login Button for Registered Users */}
+      <p>Already have an account?</p>
+      <button className="login-btn" onClick={() => navigate("/login")}>
+        Login
+      </button>
     </div>
   );
 };

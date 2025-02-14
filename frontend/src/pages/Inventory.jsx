@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Import for navigation
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Fuse from "fuse.js";
 import "../pages/css/Inventory.css";
 
 const Inventory = () => {
-  const navigate = useNavigate(); // ✅ Hook for navigation
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -90,7 +90,6 @@ const Inventory = () => {
   };
 
   const handleLogout = () => {
-    // ✅ Clear session (Modify as needed)
     localStorage.removeItem("token");
     navigate("/login");
   };
@@ -101,7 +100,7 @@ const Inventory = () => {
 
   return (
     <div className="inventory-container">
-      {/* ✅ Navbar */}
+      {/* Navbar */}
       <nav className="navbar">
         <h2 className="nav-brand">Inventory</h2>
         <div className="nav-links">
@@ -121,9 +120,7 @@ const Inventory = () => {
             value={searchQuery}
             onChange={handleSearch}
           />
-          <button className="search-btn" onClick={() => handleSearch({ target: { value: searchQuery } })}>
-            🔍
-          </button>
+          
         </div>
       </div>
 
@@ -133,7 +130,7 @@ const Inventory = () => {
           <input type="number" name="quantity" className="input-field" placeholder="Quantity" value={formData.quantity} onChange={handleChange} required />
           <input type="number" name="price" className="input-field" placeholder="Price" value={formData.price} onChange={handleChange} required />
           <input type="text" name="category" className="input-field" placeholder="Category" value={formData.category} onChange={handleChange} required />
-          <input type="text" name="note" className="input-field" placeholder="Note" value={formData.note} onChange={handleChange} required />
+          <input type="text" name="note" className="input-field" placeholder="Note" value={formData.note} onChange={handleChange}  />
         </div>
         <button type="submit" className="submit-btn">{editingItem ? "Update Item" : "Add Item"}</button>
       </form>
