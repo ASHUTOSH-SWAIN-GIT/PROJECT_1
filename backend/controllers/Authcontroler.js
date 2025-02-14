@@ -2,7 +2,7 @@ const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// 🔹 Register User
+// Register User
 exports.register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -56,7 +56,7 @@ exports.register = async (req, res) => {
 };
 
 
-// 🔹 Login User
+// Login User
 exports.login = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -82,7 +82,7 @@ exports.login = async (req, res) => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 };
-// 🔹 Get User Profile
+//  Get User Profile
 exports.getProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select("-password");

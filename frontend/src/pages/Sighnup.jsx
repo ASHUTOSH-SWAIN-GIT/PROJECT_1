@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
+import { useNavigate } from "react-router-dom"; //  Import useNavigate
 import axios from "axios";
-import "../pages/css/Sighnup.css"; // ✅ Fixed typo
+import "../pages/css/Sighnup.css"; 
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +13,7 @@ const Signup = () => {
 
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
-  const navigate = useNavigate(); // ✅ Initialize useNavigate
+  const navigate = useNavigate(); 
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,7 +24,7 @@ const Signup = () => {
     setErrors({});
     setMessage("");
 
-    // ✅ Frontend Validations
+    //  Frontend Validations
     const validationErrors = {};
     if (!formData.username.trim()) validationErrors.username = "Username is required";
     if (!formData.email.includes("@")) validationErrors.email = "Invalid email address";
@@ -37,7 +37,7 @@ const Signup = () => {
     }
 
     try {
-      // ✅ Send Correct Data to Backend
+      //  Send Correct Data to Backend
       const response = await axios.post("http://localhost:5000/api/auth/register", {
         username: formData.username, 
         email: formData.email,
@@ -47,10 +47,10 @@ const Signup = () => {
       setMessage(response.data.message || "Signup successful!");
       localStorage.setItem("token", response.data.token); 
 
-      // ✅ Clear form
+      //  Clear form
       setFormData({ username: "", email: "", password: "", confirmPassword: "" });
 
-      // ✅ Redirect to Login Page after Signup
+      // Redirect to Login Page after Signup
       setTimeout(() => {
         navigate("/login");
       }, 2000); // Redirect after 2 seconds
@@ -96,7 +96,7 @@ const Signup = () => {
         <button type="submit">Sign Up</button>
       </form>
 
-      {/* ✅ Login Button for Registered Users */}
+      {/* Login Button for Registered Users */}
       <p>Already have an account?</p>
       <button className="login-btn" onClick={() => navigate("/login")}>
         Login

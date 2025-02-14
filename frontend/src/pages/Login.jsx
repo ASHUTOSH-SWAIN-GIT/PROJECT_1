@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
+import { useNavigate } from "react-router-dom"; //  Import useNavigate
 import "./css/Login.css";
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // ✅ Initialize useNavigate
+  const navigate = useNavigate(); //  Initialize useNavigate
 
-  // ✅ Handle Input Change
+  //  Handle Input Change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ✅ Handle Form Submission
+  //  Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -35,9 +35,9 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", data.token); // ✅ Save JWT Token
+        localStorage.setItem("token", data.token); //  Save JWT Token
         alert("Login Successful!");
-        navigate("/"); // ✅ Redirect to Home Page
+        navigate("/"); //  Redirect to Home Page
       } else {
         setError(data.message || "Invalid credentials");
       }
