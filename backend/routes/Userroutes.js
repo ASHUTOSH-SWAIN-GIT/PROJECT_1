@@ -1,15 +1,10 @@
-const express = require('express');
+// 📁 routes/userRoutes.js
+const express = require("express");
 const router = express.Router();
-const { register, login, getProfile } = require('../controllers/Authcontroler'); // Import controllers
-const authMiddleware = require('../middleware/authMiddleware'); // Auth middleware to protect routes
+const { getProfile } = require("../controllers/Authcontroler"); // User-related controllers
+const authMiddleware = require("../middleware/authMiddleware"); // Protect routes
 
-// Register a new user
-router.post('/register', register);
-
-// Login user
-router.post('/login', login);
-
-// Get user profile (protected route, requires authentication)
-router.get('/profile', authMiddleware, getProfile);
+// Protected Routes (Require authentication)
+router.get("/profile", authMiddleware, getProfile); // Get user profile
 
 module.exports = router;

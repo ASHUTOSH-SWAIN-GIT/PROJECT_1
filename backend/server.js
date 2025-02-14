@@ -5,7 +5,7 @@ const cors = require("cors");
 
 // Initialize Express app
 const app = express();
-const port = process.env.PORT || 4000; // Use port 4000 for backend
+const port = process.env.PORT || 3000; // Use port 4000 for backend
 
 // Middleware
 app.use(express.json());
