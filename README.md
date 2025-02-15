@@ -49,7 +49,7 @@ This project is a **CRUD-based Inventory Management System** with user authentic
 
 ## Technologies Used
 - **Backend:** Node.js, Express.js, MongoDB, Mongoose
-- **Frontend:** React.js, Vite, Tailwind CSS
+- **Frontend:** React.js, Vite
 - **Authentication:** JWT
 
 
