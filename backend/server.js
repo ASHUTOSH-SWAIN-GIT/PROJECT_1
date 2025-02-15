@@ -6,20 +6,19 @@ const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 3000;
 
+// ✅ Use a more open CORS setup
+app.use(cors());
+
+// ✅ Manually set CORS headers for all responses
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");  // Allow all origins
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
+});
+
 // Middleware
 app.use(express.json());
-
-// Enable CORS dynamically
-const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS
-  ? process.env.CORS_ALLOWED_ORIGINS.split(",")
-  : ["http://localhost:5173"]; // Default frontend URL
-
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  })
-);
 
 // Import routes
 const inventoryRoutes = require("./routes/InventoryRoute");
@@ -36,7 +35,7 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     app.listen(port, () => {
-      console.log(`Connected to MongoDB & Server running on http://localhost:${port}`);
+      console.log(`Connected to MongoDB & Server running on port ${port}`);
     });
   })
   .catch((err) => {

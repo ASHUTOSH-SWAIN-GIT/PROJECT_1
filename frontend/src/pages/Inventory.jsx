@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Fuse from "fuse.js";
 import "../pages/css/Inventory.css";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 const Inventory = () => {
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ const Inventory = () => {
 
   const fetchInventory = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/inventory`);
+      const response = await axios.get(`${API_BASE_URL}/api/inventory`);
       setItems(response.data);
       setFilteredItems(response.data);
     } catch (error) {
@@ -63,9 +65,9 @@ const Inventory = () => {
     e.preventDefault();
     try {
       if (editingItem) {
-        await axios.put(`http://localhost:5000/api/inventory/${editingItem._id}`, formData);
+        await axios.put(`${API_BASE_URL}/api/inventory/${editingItem._id}`, formData);
       } else {
-        await axios.post(`http://localhost:5000/api/inventory`, formData);
+        await axios.post(`${API_BASE_URL}/api/inventory`, formData);
       }
       setFormData({ name: "", quantity: "", price: "", category: "", note: "" });
       setEditingItem(null);
@@ -82,7 +84,7 @@ const Inventory = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/inventory/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/inventory/${id}`);
       fetchInventory();
     } catch (error) {
       console.error("Error deleting inventory:", error);
@@ -91,7 +93,7 @@ const Inventory = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    navigate("/");
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
