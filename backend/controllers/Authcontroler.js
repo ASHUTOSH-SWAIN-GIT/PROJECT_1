@@ -34,7 +34,7 @@ exports.register = async (req, res) => {
         const user = new User({ 
             username: trimmedUsername, 
             email: trimmedEmail, 
-            password // 🔹 No manual hashing here
+            password // No manual hashing here
         });
 
         await user.save();
